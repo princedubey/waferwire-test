@@ -16,7 +16,7 @@ export const mockUsers: User[] = [
     name: 'Waferwire User',
     email: 'user@example.com',
     role: 'user',
-    avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
     department: 'Marketing',
     joinedDate: '2023-03-20',
     status: 'active'
