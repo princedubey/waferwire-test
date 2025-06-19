@@ -12,31 +12,30 @@ import {
   ChevronLeft
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { NavLink } from 'react-router-dom';
 
 interface SidebarProps {
-  currentPage: string;
-  onPageChange: (page: string) => void;
   isCollapsed: boolean;
   onToggleCollapse: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ currentPage, onPageChange, isCollapsed, onToggleCollapse }) => {
+const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggleCollapse }) => {
   const { user, logout } = useAuth();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   const adminNavItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'users', label: 'User Management', icon: Users },
-    { id: 'reports', label: 'Reports', icon: FileText },
-    { id: 'profile', label: 'Profile', icon: User },
-    { id: 'about', label: 'About', icon: Info },
+    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
+    { id: 'users', label: 'User Management', icon: Users, path: '/users' },
+    { id: 'reports', label: 'Reports', icon: FileText, path: '/reports' },
+    { id: 'profile', label: 'Profile', icon: User, path: '/profile' },
+    { id: 'about', label: 'About', icon: Info, path: '/about' },
   ];
 
   const userNavItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'reports', label: 'Reports', icon: FileText },
-    { id: 'profile', label: 'Profile', icon: User },
-    { id: 'about', label: 'About', icon: Info },
+    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
+    { id: 'reports', label: 'Reports', icon: FileText, path: '/reports' },
+    { id: 'profile', label: 'Profile', icon: User, path: '/profile' },
+    { id: 'about', label: 'About', icon: Info, path: '/about' },
   ];
 
   const navItems = user?.role === 'admin' ? adminNavItems : userNavItems;
@@ -109,37 +108,32 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPage, onPageChange, isCollapse
             <div className="nav nav-pills flex-column">
               {navItems.map((item) => {
                 const Icon = item.icon;
-                const isActive = currentPage === item.id;
-                
                 return (
-                  <button
+                  <NavLink
                     key={item.id}
-                    onClick={() => onPageChange(item.id)}
-                    className={`
+                    to={item.path}
+                    className={({ isActive }) => `
                       nav-item btn text-start d-flex align-items-center p-2 mb-1 border-0 position-relative
-                      ${isActive 
-                        ? 'btn-gradient text-white' 
-                        : 'btn-light text-dark'
-                      }
+                      ${isActive ? 'btn-gradient text-white' : 'btn-light text-dark'}
                       ${isCollapsed ? 'justify-content-center' : ''}
                     `}
                     title={isCollapsed ? item.label : undefined}
+                    onClick={() => setIsMobileOpen(false)}
                   >
                     <Icon size={20} className={isCollapsed ? '' : 'me-2'} />
                     {!isCollapsed && (
                       <>
                         <span className="flex-grow-1 text-truncate">{item.label}</span>
-                        {isActive && <ChevronRight size={16} />}
+                        {/* isActive is handled by NavLink */}
                       </>
                     )}
-                    
                     {/* Tooltip for collapsed state */}
                     {isCollapsed && (
                       <div className="tooltip-custom">
                         {item.label}
                       </div>
                     )}
-                  </button>
+                  </NavLink>
                 );
               })}
             </div>
@@ -157,7 +151,6 @@ const Sidebar: React.FC<SidebarProps> = ({ currentPage, onPageChange, isCollapse
             >
               <LogOut size={20} className={isCollapsed ? '' : 'me-2'} />
               {!isCollapsed && <span>Logout</span>}
-              
               {/* Tooltip for collapsed state */}
               {isCollapsed && (
                 <div className="tooltip-custom">
