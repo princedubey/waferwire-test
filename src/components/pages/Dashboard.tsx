@@ -9,11 +9,12 @@ import {
   Activity,
   Target
 } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
 import { adminStats, userStats } from '../../data/mockData';
 
 const Dashboard: React.FC = () => {
-  const { user } = useAuth();
+  const { user } = useSelector((state: RootState) => state.auth);
   const isAdmin = user?.role === 'admin';
   const stats = isAdmin ? adminStats : userStats;
 

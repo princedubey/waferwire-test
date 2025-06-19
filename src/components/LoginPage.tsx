@@ -1,24 +1,57 @@
 import React, { useState } from 'react';
 import { Lock, Mail, Eye, EyeOff, LogIn } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
 import { Navigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../store';
+import { login as loginAction, setLoading } from '../features/auth/authSlice';
+import { User } from '../types';
+
+// Mock users data (move to a shared location if needed)
+const mockUsers: User[] = [
+  {
+    id: '1',
+    name: 'Waferwire Admin',
+    email: 'admin@example.com',
+    role: 'admin',
+    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
+    department: 'IT',
+    joinedDate: '2023-01-15',
+    status: 'active'
+  },
+  {
+    id: '2',
+    name: 'Waferwire User',
+    email: 'user@example.com',
+    role: 'user',
+    avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
+    department: 'Marketing',
+    joinedDate: '2023-03-20',
+    status: 'active'
+  }
+];
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-  const { login, isLoading, user } = useAuth();
+  const dispatch = useDispatch();
+  const { user, isLoading } = useSelector((state: RootState) => state.auth);
 
   if (user) return <Navigate to="/dashboard" replace />;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    
-    const success = await login(email, password);
-    if (!success) {
+    dispatch(setLoading(true));
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API delay
+    const foundUser = mockUsers.find(u => u.email === email);
+    if (foundUser && password === 'password') {
+      dispatch(loginAction(foundUser));
+      localStorage.setItem('user', JSON.stringify(foundUser));
+    } else {
       setError('Invalid credentials. Please try again.');
+      dispatch(setLoading(false));
     }
   };
 

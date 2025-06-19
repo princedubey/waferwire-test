@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import Sidebar from './layout/Sidebar';
 import { Outlet } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
 
 const DashboardLayout: React.FC = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const { user } = useAuth();
 
   return (
     <div className="min-vh-100 bg-light d-flex">

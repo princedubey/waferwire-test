@@ -13,10 +13,11 @@ import {
   Bell,
   Lock
 } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
 
 const Profile: React.FC = () => {
-  const { user } = useAuth();
+  const { user } = useSelector((state: RootState) => state.auth);
   const [isEditing, setIsEditing] = useState(false);
   const [editedUser, setEditedUser] = useState({
     name: user?.name || '',
@@ -90,7 +91,7 @@ const Profile: React.FC = () => {
                 <img
                   src={user?.avatar || `https://ui-avatars.com/api/?name=${user?.name}&background=3B82F6&color=fff&size=120`}
                   alt={user?.name}
-                  className="rounded-circle border border-3 border-white shadow"
+                  className="rounded-circle border-3 border-white shadow"
                   style={{width: '120px', height: '120px'}}
                 />
                 <button className="btn btn-primary btn-sm rounded-circle position-absolute bottom-0 end-0">

@@ -11,8 +11,10 @@ import {
   ChevronRight,
   ChevronLeft
 } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext';
 import { NavLink } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../../store';
+import { logout as logoutAction } from '../../features/auth/authSlice';
 
 interface SidebarProps {
   isCollapsed: boolean;
@@ -20,8 +22,14 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggleCollapse }) => {
-  const { user, logout } = useAuth();
+  const { user } = useSelector((state: RootState) => state.auth);
+  const dispatch = useDispatch();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+
+  const handleLogout = () => {
+    dispatch(logoutAction());
+    localStorage.removeItem('user');
+  };
 
   const adminNavItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
@@ -142,7 +150,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggleCollapse }) => {
           {/* Logout Button */}
           <div className="p-3 border-top">
             <button
-              onClick={logout}
+              onClick={handleLogout}
               className={`
                 btn btn-outline-danger w-100 d-flex align-items-center border-0
                 ${isCollapsed ? 'justify-content-center' : ''}

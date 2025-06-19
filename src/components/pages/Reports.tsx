@@ -13,10 +13,11 @@ import {
 } from 'lucide-react';
 import { mockReports } from '../../data/mockData';
 import { Report } from '../../types';
-import { useAuth } from '../../context/AuthContext';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
 
 const Reports: React.FC = () => {
-  const { user } = useAuth();
+  const { user } = useSelector((state: RootState) => state.auth);
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [reports] = useState<Report[]>(mockReports);
 
